@@ -1,0 +1,24 @@
+model{	
+
+   for(i in 1 : N) {
+      
+      ## T: trt[i]==1, C+HC0+HC1: trt[i]==0
+      ## TrialMorpheus: extD==1, EC_IMvigor210 (HC0): extD==2, EC_IMvigor211 (HC1): extD==3
+      
+      Y[i] ~ dbern(p[i])
+      logit(p[i]) <- alpha[extD[i]] + beta * trt[i] # p is the likelihood
+      }
+      
+      ### prior 
+
+     beta ~ dnorm(0, 0.001)
+
+     alpha[1] ~ dnorm(0, 0.001)
+     alpha[2] ~ dnorm(alpha[1],tau1)
+     alpha[3] ~ dnorm(alpha[1],tau2)
+
+     tau1 ~ dgamma(0.001, 0.001)
+     tau2 ~ dgamma(0.001, 0.001)
+
+     logOR_TC=beta
+      }
