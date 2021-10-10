@@ -1,0 +1,43 @@
+data {
+      cadj <- 100000
+      for(i in 1 : N ) {
+      zeros[i] <- 0
+      }
+      }
+
+model{	
+
+   for(i in 1 : N) {
+      
+     ## T: trt[i]==1, C+HC0+HC1: trt[i]==0
+     ## TrialMorpheus: extS==1, EC_IMvigor210+EC_IMvigor211 (HC0+HC1): extS==2
+      
+      mu[i]<-exp(alpha[extS[i]]+beta*trt[i])
+
+      l[i] <- r0*mu[i]*pow(Y[i],r0-1)
+      
+      #### cumulative hazard
+      HL[i] <- mu[i] * pow(Y[i],r0)
+      
+      L[i] <-  pow(l[i], event[i]) * exp(-HL[i])
+      
+      phi[i] <-  -log (L[i]) + cadj
+
+      zeros[i] ~ dpois( phi[i] )     # likelihood is exp(-phi[i])
+      }
+      
+      ### prior 
+
+     beta ~ dnorm(0, 0.001)
+
+     alpha[1] ~ dnorm(0, 0.001)
+     alpha[2] ~ dnorm(alpha[1],1/(sigma1^2))
+
+     sigma1 ~ dt(0, pow(2.5,-2), 1)T(0,)
+     
+
+     
+     r0 ~ dexp(10)
+
+     logHR_TC=beta
+     }
