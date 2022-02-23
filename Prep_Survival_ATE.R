@@ -22,7 +22,7 @@ Nsim=500
 
 ###### 
 ############ Sample size
-nT=16; nT.w=30; nC=22; nHC0=145; nHC1=467 
+nT=16; nT.w=40; nC=22; nHC0=145; nHC1=467 
 N=nT+nC+nHC0+nHC1
 N.w=nT.w+nC+nHC0+nHC1
 ############ Arm
@@ -37,26 +37,18 @@ A.w=relevel(factor(c(A_MT.w, A_MC, A_HC0, A_HC1)),ref="C")
 DA.w=dummy_cols(A.w)
 
 ############ Conditional Arm effect 
-# beta (log OR/log HR)=c(HC0, HC1, T)
+# beta (log HR)=c(HC0, HC1, T)
 # Scenario 1 (All equivalent)
 beta1=c(log(1), log(1), log(1))
 
-# Scenario 2 (HC0=HC1=C<T)
-beta2=c(log(1), log(1), log(2))
-
-# # Scenario 3 (HC0=HC1<C<T)
-# beta3=c(log(0.7), log(0.7), log(2))
-# 
-# # Scenario 4  (HC0<HC1<C<T)
-# beta4=c(log(0.5), log(0.7), log(2))
-# 
-# beta=cbind(beta1,beta2,beta3,beta4)
+# New Scenario 2 (HC0=HC1=C<T)
+beta2=c(log(1), log(1), log(1/2))
 
 # New Scenario 3 (HC0=HC1<C<T)
-beta3=c(log(0.3), log(0.3), log(2))
+beta3=c(log(3), log(3), log(1/2))
 
 # New Scenario 4  (HC0<HC1<C<T)
-beta4=c(log(0.08), log(0.3), log(2))
+beta4=c(log(12), log(3), log(1/2))
 
 beta=cbind(beta1,beta2,beta3,beta4)
 
@@ -168,20 +160,31 @@ beta0=0.2
 
 ######
 ############ Estimate true ATT: marginal OR(T/C)
-
-# ### Generating survival outcomes
 Gen_Y=function(N, arm, con_effect, cov, nT){
   v=2
   A=-log(runif(N,0,1))
   B= exp(as.matrix(arm[,3:5]) %*% con_effect + cov %*% alpha + cov[, 8]*arm[,5]*gamma)
   Y=(A/B)^(1/v)
   Y1=Y[1:nT];Y2=Y[(nT+1):(nT+nC)];Y3=Y[(nT+nC+1):(nT+nC+nHC0)];Y4=Y[(nT+nC+nHC0+1):(nT+nC+nHC0+nHC1)]
-  C1=rnorm(nT,mean(Y1),0.1);c1=ifelse(C1>Y1,1,0)
-  C2=rnorm(nC,mean(Y2),0.1);c2=ifelse(C2>Y2,1,0)
-  C3=rnorm(nHC0,mean(Y3),0.1);c3=ifelse(C3>Y3,1,0)
-  C4=rnorm(nHC1,mean(Y4),0.1);c4=ifelse(C4>Y4,1,0)
+  C1=rnorm(nT,mean(1.5*Y1),0.1);c1=ifelse(C1>Y1,1,0)
+  C2=rnorm(nC,mean(1.5*Y2),0.1);c2=ifelse(C2>Y2,1,0)
+  C3=rnorm(nHC0,mean(1.5*Y3),0.1);c3=ifelse(C3>Y3,1,0)
+  C4=rnorm(nHC1,mean(1.5*Y4),0.1);c4=ifelse(C4>Y4,1,0)
   return(Surv(Y,c(c1,c2,c3,c4)))
 }
+# ### Generating survival outcomes
+# Gen_Y=function(N, arm, con_effect, cov, nT){
+#   v=2
+#   A=-log(runif(N,0,1))
+#   B= exp(as.matrix(arm[,3:5]) %*% con_effect + cov %*% alpha + cov[, 8]*arm[,5]*gamma)
+#   Y=(A/B)^(1/v)
+#   Y1=Y[1:nT];Y2=Y[(nT+1):(nT+nC)];Y3=Y[(nT+nC+1):(nT+nC+nHC0)];Y4=Y[(nT+nC+nHC0+1):(nT+nC+nHC0+nHC1)]
+#   C1=rnorm(nT,mean(Y1),0.1);c1=ifelse(C1>Y1,1,0)
+#   C2=rnorm(nC,mean(Y2),0.1);c2=ifelse(C2>Y2,1,0)
+#   C3=rnorm(nHC0,mean(Y3),0.1);c3=ifelse(C3>Y3,1,0)
+#   C4=rnorm(nHC1,mean(Y4),0.1);c4=ifelse(C4>Y4,1,0)
+#   return(Surv(Y,c(c1,c2,c3,c4)))
+# }
 
 Gen_Y_Bayes=function(N, arm, con_effect, cov, nT){
   v=2
@@ -197,14 +200,14 @@ Gen_Y_Bayes=function(N, arm, con_effect, cov, nT){
 }
 
 # #hist(Gen_Y(N, DA, beta[,2],X))
-# 
-# 
+#
+#
 # # survival small MT ATT
 
 # Gen_Y_ATT=function(AA, X){
 #   v=2
 #   A=-log(runif(length(AA),0,1))
-#   B=exp(as.matrix(AA*log(2) + X %*% alpha + X[, 8]*AA*gamma))
+#   B=exp(as.matrix(AA*log(1/2) + X %*% alpha + X[, 8]*AA*gamma))
 #   Time=(A/B)^(1/v)
 #   return(Time)}
 # 
@@ -219,11 +222,11 @@ Gen_Y_Bayes=function(N, arm, con_effect, cov, nT){
 #   new.Y=c(Y0,Y1);new.trt=c(rep(0,samplenumber),rep(1,samplenumber))
 #   result[i]=summary(coxph(Surv(new.Y)~new.trt))$coef[1]
 # }
-#result=mean(result)
-# # #  
-result=0.7077683
+# result=mean(result)
+# # #
+result=-0.6810789
 ATT.surv=c(0,result,result,result)
-# 
+#
 # survival big MT
 # samplenumber=200
 # result=NULL
@@ -237,7 +240,7 @@ ATT.surv=c(0,result,result,result)
 #   result[i]=summary(coxph(Surv(new.Y)~new.trt))$coef[1]
 # }
 # result=mean(result)
-result=0.7066248
+result=-0.6807652
 ATT.surv.w=c(0,result,result,result)
 
 
@@ -259,3 +262,4 @@ extS=c(rep(1,nT+nC),rep(2,nHC0+nHC1))
 extS.w=c(rep(1,nT.w+nC),rep(2,nHC0+nHC1))
 trt=c(rep(1,nT),rep(0,N-nT))
 trt.w=c(rep(1,nT.w),rep(0,N.w-nT.w))
+
