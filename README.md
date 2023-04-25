@@ -10,7 +10,7 @@ This repository contains the simulation R and jags code for evaluating hybrid co
 ## Bayesian dynamic borrowing using:
 1. Informative prior (Same), 2. Weakly-informative prior (Same), 3. Non-informative prior (Same)
 4. Informative prior (Distinguish), 5. Weakly-informative prior (Distinguish), 6. Non-informative prior (Distinguish)
-7. No borrpwong, 8. No borrpwong
+7. No borrpwong, 8. No borrowong
 
 ## Sample size: 
 Conconrrent trial: treated (T): 16/40, control (C): 22<br>
