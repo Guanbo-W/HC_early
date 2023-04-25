@@ -13,9 +13,9 @@ This repository contains the simulation R and jags code for evaluating hybrid co
 7. No borrpwong, 8. No borrpwong
 
 ## Sample size: 
-Conconrrent trial: treated (T): 16/40, control (C): 22\\
-Historical control 1 (HC0): 145
-Historical control 2 (HC1): 467
+Conconrrent trial: treated (T): 16/40, control (C): 22<br>
+Historical control 1 (HC0): 145<br>
+Historical control 2 (HC1): 467<br>
 
 ## Treatment effects (log harvard ratio scale):
 Scenario 1 (All equivalent)
