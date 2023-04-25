@@ -19,14 +19,14 @@ library(survival)
 library(rjags)
 set.seed(2021)
 
-Nsim=100
+Nsim=500
 Ncore=7
 n.chains=3
 n.adapt=1000
 n.iter=2000
 ###### 
 ############ Sample size
-nT=16; nT.w=30; nC=22; nHC0=145; nHC1=467 
+nT=16; nT.w=40; nC=22; nHC0=145; nHC1=467 
 N=nT+nC+nHC0+nHC1
 N.w=nT.w+nC+nHC0+nHC1
 ############ Arm
