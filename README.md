@@ -7,7 +7,7 @@ This repository contains the simulation R and jags code for evaluating hybrid co
 1. Separated IPTW (AFT), 2. Separated full matching (AFT), 3. Joint IPTW (AFT), 4. Joint full matching (AFT)
 5. Separated IPTW (Cox), 6. Separated full matching (Cox), 7. Joint IPTW (Cox), 8. Joint full matching (Cox)
 
-## Bayesian Dynamic borrowing using:
+## Bayesian dynamic borrowing using:
 1. Informative prior (Same), 2. Weakly-informative prior (Same), 3. Non-informative prior (Same)
 4. Informative prior (Distinguish), 5. Weakly-informative prior (Distinguish), 6. Non-informative prior (Distinguish)
 7. No borrpwong, 8. No borrpwong
@@ -29,3 +29,6 @@ beta3=c(log(0.7), log(0.7), log(2))
 
 Scenario 4  (HC0<HC1<C<T)
 beta4=c(log(0.5), log(0.7), log(2))
+
+## Evaluation
+Bias, Variance, MSE, Effective sample size.
